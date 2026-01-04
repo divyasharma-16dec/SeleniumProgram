@@ -6,6 +6,8 @@ from pageObjects.HomePage import HomePage
 import os
 
 from utilities.ReadProperties import ReadProperties
+
+
 '''
 1. Conftest: function -- setup
 2. register page: class -- RegisterPage & fuctions -- enterFirtName , ....
@@ -15,17 +17,21 @@ from utilities.ReadProperties import ReadProperties
 '''
 
 class TestRegister:
-    baseURL= ReadProperties.get_URL()
+
+    baseURL= ReadProperties.get_URL() #ReadProperties
 
     def test_doregister(self,setup):
+        #self.log.info("Account registration process started.")
         self.driver = setup
         self.driver.get(self.baseURL)
 
         self.hp = HomePage(self.driver)
+        #self.log.debug("clicking on MyAccount--> register")
         self.hp.click_accountlink()
         self.hp.click_registerlink()
 
         self.register = RegisterPage(self.driver)
+        #self.log.debug("Enter the first name")
         self.register.enter_firstname()
         self.register.enter_lastname()
         self.register.enter_emailid()
@@ -37,15 +43,19 @@ class TestRegister:
         self.register.click_registersubmit()
         if self.register.getconfirmationmessage():
             print("Register done")
+            #self.log.info("Register success.")
             assert True
         else:
             self.driver.save_screenshot(os.path.abspath(os.curdir)+"\\screenshots\\"+"test_register001.png")
             print("Register is not done.")
+            #self.log.error("Reister not done")
             assert False
 
         self.hp.click_accountlink()
         time.sleep(2)
         self.hp.click_logoutlink()
+
+        #self.log.info("Logout done")
 
 
 

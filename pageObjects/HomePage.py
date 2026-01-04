@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 
@@ -21,5 +22,21 @@ class HomePage():
         self.driver.find_element(*self.login_link).click()
 
     def click_logoutlink(self):
-        self.driver.find_element(*self.logout_link).click()
+        try:
+             self.driver.find_element(*self.logout_link).click()
+        except NoSuchElementException:
+            pass
+
+    def click_logout(self):
+        return self.driver.find_element(*self.logout_link).click()
+
+
+'''
+    def click_logoutlink(self):
+        try:
+            self.driver.find_element(*self.logout_link).click()
+            return True
+        except NoSuchElementException:
+            return False '''
+
 

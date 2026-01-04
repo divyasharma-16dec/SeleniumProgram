@@ -1,5 +1,8 @@
+from datetime import datetime
+
 import pytest
 from selenium import webdriver
+import os
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -30,3 +33,23 @@ def setup(request):
 
     yield driver
     driver.quit()
+
+#### HTML Report ####
+
+# It is hook for Adding Environment info to HTML Report
+
+def pytest_configure(config):
+    config._metadata['Project Name'] = 'TutorialsNinja'
+    config._metadata['Module Name'] = 'Register & Login'
+    config._metadata['Tester'] = 'Divya Sharma'
+
+# It is hook for delete/Modify Environment info to HTML Report
+@pytest.mark.optionalhook
+def pytest_metadata(metadata):
+    metadata.pop("JAVA_HOME", None)
+    metadata.pop("Plugins", None)
+
+#Specifying report folder location and save report with timestamp
+@pytest.hookimpl(tryfirst=True)
+def pytest_configure(config):
+    config.option.htmlpath = os.path.abspath(os.curdir)+"\\Reports\\"+datetime.now().strftime("%d-%m-%Y %H-%M-%S")+".html"
