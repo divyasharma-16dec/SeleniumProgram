@@ -5,8 +5,9 @@ import os
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
 
-
+from selenium.webdriver.support import expected_conditions as EC
 class ShoppingCart:
 
     cart_button = By.ID,'cart-total'
@@ -34,10 +35,19 @@ class ShoppingCart:
         return self.driver.find_element(*self.product_name).text
 
     def update_quantity(self, qty):
-        box = self.driver.find_element(*self.quantity_box)
-        box.clear()
-        box.send_keys(qty)
-        self.driver.find_element(*self.update_qty).click()
+        wait = WebDriverWait(self.driver, 10)
+
+        qty_element = wait.until(
+            EC.element_to_be_clickable(self.update_qty)
+        )
+
+        qty_element.clear()
+        qty_element.send_keys(qty)
+
+        update_btn = wait.until(
+            EC.element_to_be_clickable(self.update_btn)
+        )
+        update_btn.click()
 
     def quantity_successmessage(self):
         try:
