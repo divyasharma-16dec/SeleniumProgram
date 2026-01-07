@@ -11,7 +11,7 @@ def pytest_addoption(parser):
         default="chrome",
         help="Choose browser: chrome / firefox / edge"
     )
-
+'''
 @pytest.fixture()
 def setup(request):
     browser = request.config.getoption("--browser")
@@ -32,7 +32,31 @@ def setup(request):
     driver.implicitly_wait(10)
 
     yield driver
+    driver.quit() '''
+
+import pytest
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+
+@pytest.fixture()
+def setup(request):
+    browser = request.config.getoption("--browser")
+
+    if browser == "chrome":
+        options = Options()
+        options.add_argument("--headless")               # REQUIRED FOR CI
+        options.add_argument("--no-sandbox")             # REQUIRED FOR CI
+        options.add_argument("--disable-dev-shm-usage")  # REQUIRED FOR CI
+
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
+
+    driver.maximize_window()
+    yield driver
     driver.quit()
+
 
 #### HTML Report ####
 
