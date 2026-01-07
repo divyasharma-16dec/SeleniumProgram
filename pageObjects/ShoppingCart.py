@@ -23,37 +23,50 @@ class ShoppingCart:
 
     def __init__(self,driver):
         self.driver = driver
+        self.wait = WebDriverWait(driver, 15)
 
     def open_cart(self):
-        self.driver.find_element(*self.cart_button).click()
-        try:
-            return self.driver.find_element(*self.view_cart).click()
-        except NoSuchElementException:
-            return None, self.driver.find_element(*self.emptycart_msg).text
+        self.wait.until(EC.element_to_be_clickable(self.cart_button)).click()
+        self.wait.until(EC.element_to_be_clickable(self.view_cart)).click()
 
     def get_product_name(self):
-        return self.driver.find_element(*self.product_name).text
+        return self.wait.until(
+            EC.visibility_of_element_located(self.product_name)
+        ).text
 
     def update_quantity(self, qty):
-        wait = WebDriverWait(self.driver, 10)
+        qty_input = self.wait.until(
+            EC.visibility_of_element_located(self.quantity_box)
+        )
+        qty_input.clear()
+        qty_input.send_keys(qty)
 
-        qty_element = wait.until(
+        self.wait.until(
             EC.element_to_be_clickable(self.update_qty)
-        )
-
-        qty_element.clear()
-        qty_element.send_keys(qty)
-
-        update_btn = wait.until(
-            EC.element_to_be_clickable(self.update_btn)
-        )
-        update_btn.click()
+        ).click()
 
     def quantity_successmessage(self):
         try:
-            return self.driver.find_element(*self.qtyupdate_successmsg).is_displayed()
-        except NoSuchElementException:
-            return None
+            return self.wait.until(
+                EC.visibility_of_element_located(self.qtyupdate_successmsg)
+            ).is_displayed()
+        except:
+            return False
 
     def remove_product(self):
-        self.driver.find_element(*self.delete_qty).click()
+        self.wait.until(
+            EC.element_to_be_clickable(self.delete_qty)
+        ).click()
+
+        # IMPORTANT: wait for page refresh / DOM update
+        self.wait.until(
+            EC.staleness_of(
+                self.driver.find_element(By.XPATH, "//table[contains(@class,'table-bordered')]")
+            )
+        )
+
+    def is_cart_table_empty(self):
+        rows = self.driver.find_elements(
+            By.XPATH, "//table[contains(@class,'table-bordered')]//tbody/tr"
+        )
+        return len(rows) == 0
