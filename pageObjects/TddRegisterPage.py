@@ -64,13 +64,13 @@ class TddRegisterPage():
 
     def getconfirmationmessage(self):
         try:
-            return self.driver.find_element(*self.validate_message).is_displayed()
+            return self.driver.find_element(*self.validate_message).text
         except NoSuchElementException:
-            return False
+            return None
 
     def warning_message(self):
         try:
             return "Warning" in self.driver.find_element(*self.warning_msg).text
         except NoSuchElementException:
-            return False
+            return None
 

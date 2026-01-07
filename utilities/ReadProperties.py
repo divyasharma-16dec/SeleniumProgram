@@ -13,5 +13,3 @@ class ReadProperties:
     def get_emaiid():
         return config.get("common info","login_email")
 
-
-x

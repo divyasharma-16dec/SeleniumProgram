@@ -23,7 +23,7 @@ class TestSearch():
 
         search = SearchPage(driver)
         return driver, search
-
+    @pytest.mark.smoke
     def test_validsearch(self,setup_search):
         driver, search = setup_search
         search.click_searchfield("mac")

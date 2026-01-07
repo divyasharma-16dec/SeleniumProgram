@@ -55,18 +55,18 @@ class LoginPage():
     def final_message(self):
         #return (self.driver.find_element(*self.header_account)).text
         try:
-            return self.driver.find_element(*self.header_account).is_displayed()
+            return self.driver.find_element(*self.header_account).text
         except NoSuchElementException:
-            return False
+            return None
 
     def invalid_message(self):
         try:
-            return "Warning" in self.driver.find_element(self.warning_validtaion).text
-        except:
+            return self.driver.find_element(*self.warning_validtaion).text
+        except NoSuchElementException:
             return None
 
     def logout_message(self):
         try:
-            return "logout" in self.driver.find_element(*self.header_accountlogout).text
-        except:
+            return self.driver.find_element(*self.header_accountlogout).text
+        except NoSuchElementException:
             return None

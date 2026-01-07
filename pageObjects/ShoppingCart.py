@@ -43,7 +43,7 @@ class ShoppingCart:
         try:
             return self.driver.find_element(*self.qtyupdate_successmsg).is_displayed()
         except NoSuchElementException:
-            return False
+            return None
 
     def remove_product(self):
         self.driver.find_element(*self.delete_qty).click()

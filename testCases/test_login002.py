@@ -24,31 +24,34 @@ class TestLogin:
         login_p = LoginPage(driver)
         return hp, login_p
 
-
+    @pytest.mark.smoke
     def test_validlogin(self,setup_login):
         hp, login_p = setup_login
         login_p.login_elements("d55@yopmail.com","Test1234@")
-        print("Testcases hasbeen done")
+        print("Testcases has been done")
 
-        assert login_p.show_loginmessage()
+        assert "My Account" in login_p.final_message()
 
+    @pytest.mark.smoke
     def test_invaliddata(self,setup_login):
         hp, login_p = setup_login
         login_p.login_elements("gg@gg","hhh")
-        assert login_p.invalid_message()
+        assert "Warning" in login_p.invalid_message()
 
+    @pytest.mark.smoke
     def test_blankdata(self, setup_login):
         hp, login_p = setup_login
         login_p.login_elements(" ", " ")
-        assert login_p.invalid_message()
+        assert "Warning" in login_p.invalid_message()
 
+    @pytest.mark.smoke
     def test_gotohomepage(self,setup_login):
         hp, login_p = setup_login
         login_p.login_elements("d55@yopmail.com","Test1234@")
         hp.click_logout()
+        assert "Logout" in login_p.logout_message()
 
-        assert login_p.logout_message()
-
+    @pytest.mark.smoke
     def test_session(self,setup):
         driver = setup
         driver.get(self.baseURL)
@@ -60,13 +63,14 @@ class TestLogin:
         login_p = LoginPage(driver)
 
         login_p.login_elements("d55@yopmail.com","Test1234@")
+        assert "My Account" in login_p.final_message()
 
         driver.delete_all_cookies()
         driver.refresh()
         hp.click_accountlink()
         hp.click_loginlink()
 
-        assert "login" in driver.title
+        assert "Account Login" in driver.title
 
 
 
