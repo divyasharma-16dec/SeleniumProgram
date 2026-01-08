@@ -1,4 +1,4 @@
-'''
+
 from datetime import datetime
 
 import pytest
@@ -12,7 +12,7 @@ def pytest_addoption(parser):
         default="chrome",
         help="Choose browser: chrome / firefox / edge"
     )
-
+'''
 @pytest.fixture()
 def setup(request):
     browser = request.config.getoption("--browser")
