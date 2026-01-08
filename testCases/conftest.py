@@ -1,3 +1,4 @@
+'''
 from datetime import datetime
 
 import pytest
@@ -77,3 +78,4 @@ def pytest_metadata(metadata):
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config):
     config.option.htmlpath = os.path.abspath(os.curdir)+"\\Reports\\"+datetime.now().strftime("%d-%m-%Y %H-%M-%S")+".html"
+'''
