@@ -11,7 +11,7 @@ def pytest_addoption(parser):
         default="chrome",
         help="Choose browser: chrome / firefox / edge"
     )
-'''
+
 @pytest.fixture()
 def setup(request):
     browser = request.config.getoption("--browser")
@@ -32,8 +32,8 @@ def setup(request):
     driver.implicitly_wait(10)
 
     yield driver
-    driver.quit() '''
-
+    driver.quit()
+'''
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -57,7 +57,7 @@ def setup(request):
     yield driver
     driver.quit()
 
-
+'''
 #### HTML Report ####
 
 # It is hook for Adding Environment info to HTML Report

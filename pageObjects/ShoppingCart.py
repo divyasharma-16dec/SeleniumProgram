@@ -3,7 +3,7 @@ from selenium import webdriver
 
 import os
 
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException,TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -15,11 +15,11 @@ class ShoppingCart:
     checkout_btn = By.LINK_TEXT,'Checkout'
     product_name = By.XPATH,"//table[@class='table table-bordered']//td[2]/a"
     quantity_box= By.XPATH,"//input[contains(@name,'quantity')]"
-    update_qty = By.XPATH,"//button[@class='btn btn-primary']"
+    update_qty = By.XPATH,"//button[@type='submit']"
     delete_qty = By.XPATH,"//button[@class='btn btn-danger']"
     qtyupdate_successmsg= By.XPATH,"//div[@class='alert alert-success alert-dismissible']"
     outofstock_successmsg = By.XPATH,"//div[@class='alert alert-danger alert-dismissible']"
-    emptycart_msg = By.XPATH,"//p[contains(text(),'Your shopping cart is empty!')]"
+    emptycart_msg = By.XPATH,"//div[@id='content']//p[contains(text(),'Your shopping cart is empty!')]"
 
     def __init__(self,driver):
         self.driver = driver
@@ -35,38 +35,18 @@ class ShoppingCart:
         ).text
 
     def update_quantity(self, qty):
-        qty_input = self.wait.until(
-            EC.visibility_of_element_located(self.quantity_box)
-        )
+        qty_input =  self.wait.until(EC.element_to_be_clickable(self.quantity_box))
         qty_input.clear()
         qty_input.send_keys(qty)
+        return self.wait.until(EC.element_to_be_clickable(self.update_qty)).click()
 
-        self.wait.until(
-            EC.element_to_be_clickable(self.update_qty)
-        ).click()
-
-    def quantity_successmessage(self):
+    def message_addremove(self):
         try:
             return self.wait.until(
                 EC.visibility_of_element_located(self.qtyupdate_successmsg)
-            ).is_displayed()
-        except:
-            return False
+            ).text
+        except TimeoutException:
+            return None
 
     def remove_product(self):
-        self.wait.until(
-            EC.element_to_be_clickable(self.delete_qty)
-        ).click()
-
-        # IMPORTANT: wait for page refresh / DOM update
-        self.wait.until(
-            EC.staleness_of(
-                self.driver.find_element(By.XPATH, "//table[contains(@class,'table-bordered')]")
-            )
-        )
-
-    def is_cart_table_empty(self):
-        rows = self.driver.find_elements(
-            By.XPATH, "//table[contains(@class,'table-bordered')]//tbody/tr"
-        )
-        return len(rows) == 0
+        self.wait.until(EC.element_to_be_clickable(self.delete_qty)).click()

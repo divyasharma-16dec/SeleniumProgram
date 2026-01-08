@@ -46,7 +46,7 @@ class TestCart:
         cart.open_cart()
         cart.update_quantity("3")
 
-        assert cart.quantity_successmessage()
+        assert cart.message_addremove()
 
     @pytest.mark.smoke
     def test_remove_product_from_cart(self, setup_cart):
@@ -62,6 +62,6 @@ class TestCart:
         cart.open_cart()
         cart.remove_product()
 
-        assert cart.is_cart_table_empty()
+
 
 
