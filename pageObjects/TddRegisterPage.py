@@ -1,8 +1,11 @@
 from selenium import webdriver
-from selenium.common import NoSuchElementException #safely handle missing elements
+from selenium.common.exceptions import NoSuchElementException, TimeoutException #safely handle missing elements
 from selenium.webdriver.common.by import By  #By used to define locators
 from utilities.RandomString import RandomData
 from utilities.RandomString import fakedata
+
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class TddRegisterPage():
     first_name = By.ID,"input-firstname"
@@ -20,6 +23,7 @@ class TddRegisterPage():
 
     def __init__(self,driver):
         self.driver=driver
+        self.wait = WebDriverWait(driver,15)
 
     def register_elements(self,fn,ln,email,telephone,pw,cpw):
         self.driver.find_element(*self.first_name).send_keys(fn)
@@ -30,10 +34,7 @@ class TddRegisterPage():
         self.driver.find_element(*self.confirm_password).send_keys(cpw)
         self.driver.find_element(*self.newsletter_field).click()
         self.driver.find_element(*self.privacy_policy).click()
-        self.driver.find_element(*self.register_subimitbutton).click()
-
-
-
+        self.wait.until(EC.element_to_be_clickable(self.register_subimitbutton)).click()
 
     def enter_firstname(self):
         self.driver.find_element(*self.first_name).send_keys(fakedata.randomFirstName())

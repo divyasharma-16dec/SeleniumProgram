@@ -22,4 +22,5 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run Smoke Tests
-        run: pytest -m smoke
+        run: |
+          pytest -m smoke
